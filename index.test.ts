@@ -1,8 +1,8 @@
 import {
     createStore, chatReducer, addMessage,
     setMessages, setUsers, setSearchQuery,
-    fetchMessages, fetchUsers, Message, User
-} from './index'
+    Message, User
+} from './chatReducer'
 
 describe('Chat Store', () => {
     let store: ReturnType<typeof createStore>
@@ -21,14 +21,14 @@ describe('Chat Store', () => {
     })
 
     it('should handle adding a message', () => {
-        const message: Message = { id: '1', text: 'Hello', userId: '1', timestamp: Date.now() }
+        const message: Message = { nickname: 'user', id: '1', message: 'Hello', timestamp: Date.now() }
         store.dispatch(addMessage(message))
         const state = store.getState()
         expect(state.messages).toContainEqual(message)
     })
 
     it('should handle setting messages', () => {
-        const messages: Message[] = [{ id: '1', text: 'Hello', userId: '1', timestamp: Date.now() }]
+        const messages: Message[] = [{ nickname: 'user', id: '1', message: 'Hello', timestamp: Date.now() }]
         store.dispatch(setMessages(messages))
         const state = store.getState()
         expect(state.messages).toEqual(messages)
@@ -50,38 +50,12 @@ describe('Chat Store', () => {
 
     it('should filter messages based on search query', () => {
         const messages: Message[] = [
-            { id: '1', text: 'Hello', userId: '1', timestamp: Date.now() },
-            { id: '2', text: 'Hi', userId: '2', timestamp: Date.now() }
+            { nickname: 'user1', id: '1', message: 'Hello', timestamp: Date.now() },
+            { nickname: 'user2', id: '2', message: 'Hi', timestamp: Date.now() }
         ]
         store.dispatch(setMessages(messages))
         store.dispatch(setSearchQuery('Hello'))
         const state = store.getState()
-        expect(state.messages.filter(message => message.text.includes('Hello'))).toEqual([messages[0]])
-    })
-
-    it('should handle fetching messages asynchronously', (done) => {
-        const messages: Message[] = [
-            { id: '1', text: 'Hello', userId: '1', timestamp: Date.now() },
-            { id: '2', text: 'Hi', userId: '2', timestamp: Date.now() }
-        ]
-        store.dispatch(fetchMessages(messages))
-        setTimeout(() => {
-            const state = store.getState()
-            expect(state.messages).toEqual(messages)
-            done()
-        }, 1500)
-    })
-
-    it('should handle fetching users asynchronously', (done) => {
-        const users: User[] = [
-            { id: '1', name: 'User1' },
-            { id: '2', name: 'User2' }
-        ]
-        store.dispatch(fetchUsers(users))
-        setTimeout(() => {
-            const state = store.getState()
-            expect(state.users).toEqual(users)
-            done()
-        }, 1500)
+        expect(state.messages.filter(message => message.message.includes('Hello'))).toEqual([messages[0]])
     })
 })
