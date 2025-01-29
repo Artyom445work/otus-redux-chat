@@ -15,7 +15,15 @@ export default tseslint.config(
           // "no-unused-vars": "error",
           "@typescript-eslint/no-unused-vars": "error",
           "@typescript-eslint/no-explicit-any": "off",
-          "no-undef": "error"
+          "no-undef": "error",
+          "no-useless-escape": "off"
       },
-    }
+        ignores: ['./webpack.config.js']
+    },
+    {
+        files: ["webpack.config.js"],
+        rules: {
+            "@typescript-eslint/no-require-imports": "off"
+        },
+    },
 );
